@@ -17,9 +17,7 @@ const CourseManagement = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(
-          "https://lms-backend-1-yx57.onrender.com/courses"
-        );
+        const response = await axios.get("http://127.0.0.1:5000/courses");
         setCourses(response.data);
         setLoading(false);
       } catch (error) {
@@ -38,7 +36,7 @@ const CourseManagement = () => {
     setNotifications((prev) => [...prev, message]);
     setTimeout(() => {
       setNotifications((prev) => prev.slice(1));
-    }, 3000); 
+    }, 3000);
   };
 
   const handleDeleteCourse = async (id) => {
@@ -54,9 +52,11 @@ const CourseManagement = () => {
   const handleArchiveCourse = async (id) => {
     try {
       await axios.put(`http://127.0.0.1:5000/courses/${id}/archive`);
-      setCourses(courses.map(course =>
-        course.id === id ? { ...course, isArchived: true } : course
-      ));
+      setCourses(
+        courses.map((course) =>
+          course.id === id ? { ...course, isArchived: true } : course
+        )
+      );
       notifyActivity(`Course with ID "${id}" was archived.`);
     } catch (error) {
       console.error("Error archiving course:", error);
@@ -66,9 +66,11 @@ const CourseManagement = () => {
   const handleUnarchiveCourse = async (id) => {
     try {
       await axios.put(`http://127.0.0.1:5000/courses/${id}/unarchive`);
-      setCourses(courses.map(course =>
-        course.id === id ? { ...course, isArchived: false } : course
-      ));
+      setCourses(
+        courses.map((course) =>
+          course.id === id ? { ...course, isArchived: false } : course
+        )
+      );
       notifyActivity(`Course with ID "${id}" was unarchived.`);
     } catch (error) {
       console.error("Error unarchiving course:", error);
@@ -99,13 +101,17 @@ const CourseManagement = () => {
         Admin Course Management System
       </h2>
       <h1>
-        View Course: Browse through the list of courses & DELETE, ARCHIVE, or UNARCHIVE a specific course.
+        View Course: Browse through the list of courses & DELETE, ARCHIVE, or
+        UNARCHIVE a specific course.
       </h1>
 
-     
+      {/* Notifications */}
       <div className="mb-4">
         {notifications.map((notification, index) => (
-          <div key={index} className="bg-green-600 text-white px-4 py-2 rounded mb-2">
+          <div
+            key={index}
+            className="bg-green-600 text-white px-4 py-2 rounded mb-2"
+          >
             {notification}
           </div>
         ))}
@@ -120,14 +126,20 @@ const CourseManagement = () => {
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4"
             >
               {courses.map((course, index) => (
-                <Draggable draggableId={course.id.toString()} index={index} key={course.id}>
+                <Draggable
+                  draggableId={course.id.toString()}
+                  index={index}
+                  key={course.id}
+                >
                   {(provided) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      onClick={() => handleClick(course.id)} 
-                      className={`bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105 hover:shadow-2xl border border-gray-200 flex flex-col cursor-pointer relative ${course.isArchived ? 'opacity-50' : ''}`}
+                      onClick={() => handleClick(course.id)}
+                      className={`bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105 hover:shadow-2xl border border-gray-200 flex flex-col cursor-pointer relative ${
+                        course.isArchived ? "opacity-50" : ""
+                      }`}
                       style={{ height: "450px", width: "300px" }}
                     >
                       <div className="relative h-[45%] w-full">
@@ -179,7 +191,7 @@ const CourseManagement = () => {
                             <>
                               <button
                                 onClick={(e) => {
-                                  e.stopPropagation(); 
+                                  e.stopPropagation();
                                   handleDeleteCourse(course.id);
                                 }}
                                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
@@ -188,7 +200,7 @@ const CourseManagement = () => {
                               </button>
                               <button
                                 onClick={(e) => {
-                                  e.stopPropagation(); 
+                                  e.stopPropagation();
                                   handleArchiveCourse(course.id);
                                 }}
                                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -199,7 +211,7 @@ const CourseManagement = () => {
                           ) : (
                             <button
                               onClick={(e) => {
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 handleUnarchiveCourse(course.id);
                               }}
                               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
